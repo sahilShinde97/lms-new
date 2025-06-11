@@ -1,43 +1,68 @@
 import cloudinary from "../config/cloudinary.js";
+import { Readable } from 'stream';
 
-const uploadToCloudinary = async (req, res, next) => {
+const cloudinaryUpload = async (req, res, next) => {
   try {
-    if (!req.files || Object.keys(req.files).length === 0) {
+    if (!req.file) {
       return next();
     }
 
-    const fileKeys = Object.keys(req.files);
-    for (const key of fileKeys) {
-      const file = req.files[key][0];
-      
-      if (!file) {
-        continue;
-      }
+    // Create a readable stream from the buffer
+    const stream = Readable.from(req.file.buffer);
 
-      // Convert buffer to base64
-      const b64 = Buffer.from(file.buffer).toString('base64');
-      const dataURI = `data:${file.mimetype};base64,${b64}`;
+    // Upload to Cloudinary using streaming
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "auto",
+          chunk_size: 6000000, // 6MB chunks
+          timeout: 300000, // 5 minutes
+          eager: [
+            { format: "mp4", quality: "auto" },
+            { format: "webm", quality: "auto" }
+          ],
+          eager_async: true,
+          invalidate: true,
+          use_filename: true,
+          unique_filename: true,
+          overwrite: true
+        },
+        (error, result) => {
+          if (error) {
+            console.error("Cloudinary upload error:", error);
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
 
-      // Upload to Cloudinary with increased timeout and chunk size
-      const result = await cloudinary.uploader.upload(dataURI, {
-        resource_type: "auto",
-        folder: "lms_uploads",
-        chunk_size: 6000000, // 6MB chunks
-        timeout: 120000 // 2 minutes timeout
+      // Handle stream errors
+      stream.on('error', (error) => {
+        console.error("Stream error:", error);
+        reject(error);
       });
 
-      // Store the Cloudinary URL in req.body
-      req.body[key] = result.secure_url;
+      // Pipe the stream to Cloudinary
+      stream.pipe(uploadStream);
+    });
+
+    // Store the Cloudinary URL in req.body
+    if (req.file.fieldname === 'video') {
+      req.body.video = result.secure_url;
+    } else if (req.file.fieldname === 'image') {
+      req.body.image = result.secure_url;
     }
+
     next();
   } catch (error) {
     console.error("Cloudinary upload error:", error);
-    return res.status(500).json({ 
+    res.status(500).json({ 
       success: false,
-      message: "File upload failed", 
+      message: "Error uploading file to Cloudinary",
       error: error.message 
     });
   }
 };
 
-export default uploadToCloudinary;
+export default cloudinaryUpload;

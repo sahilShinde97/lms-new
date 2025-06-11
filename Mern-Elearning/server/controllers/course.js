@@ -1,4 +1,4 @@
-import { instance } from "../index.js";
+import { instance } from "../config/razorpay.js";
 import TryCatch from "../middlewares/TryCatch.js";
 import { Courses } from "../models/Courses.js";
 import { Lecture } from "../models/Lecture.js";
@@ -65,13 +65,18 @@ export const getMyCourses = TryCatch(async (req, res) => {
 });
 
 export const checkout = TryCatch(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  if (!instance) {
+    return res.status(503).json({
+      success: false,
+      message: "Payment service is currently unavailable. Please try again later."
+    });
+  }
 
   const course = await Courses.findById(req.params.id);
 
-  if (user.subscription.includes(course._id)) {
-    return res.status(400).json({
-      message: "You already have this course",
+  if (!course) {
+    return res.status(404).json({
+      message: "Course not found",
     });
   }
 
@@ -82,9 +87,9 @@ export const checkout = TryCatch(async (req, res) => {
 
   const order = await instance.orders.create(options);
 
-  res.status(201).json({
+  res.status(200).json({
+    success: true,
     order,
-    course,
   });
 });
 

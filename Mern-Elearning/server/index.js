@@ -1,49 +1,48 @@
 import express from "express";
-import dotenv from "dotenv";
-import { connectDb } from "./database/db.js";
-import Razorpay from "razorpay";
+import { config } from "dotenv";
 import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
+import { ErrorMiddleware } from "./middlewares/Error.js";
+import course from "./routes/course.js";
+import user from "./routes/user.js";
+import admin from "./routes/admin.js";
+import { connectDB } from "./config/database.js";
 
-dotenv.config();
-
-export const instance = new Razorpay({
-  key_id: process.env.Razorpay_Key,
-  key_secret: process.env.Razorpay_Secret,
+config({
+  path: "./.env",
 });
 
 const app = express();
 
-// using middlewares
-app.use(express.json());
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL 
-    : 'http://localhost:5173',
-  credentials: true
-}));
+// Middleware
+app.use(express.json({ limit: '500mb' }));
+app.use(express.urlencoded({ extended: true, limit: '500mb' }));
+app.use(
+  cors({
+    origin: process.env.frontendurl || "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
-const port = process.env.PORT;
+// Routes
+app.use("/api", course);
+app.use("/api", user);
+app.use("/api", admin);
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-app.get("/", (req, res) => {
-  res.send("Server is working");
+// Increase timeout for all routes
+app.use((req, res, next) => {
+  req.setTimeout(600000); // 10 minutes
+  res.setTimeout(600000); // 10 minutes
+  next();
 });
 
-// importing routes
-import userRoutes from "./routes/user.js";
-import courseRoutes from "./routes/course.js";
-import adminRoutes from "./routes/admin.js";
+// Error handling
+app.use(ErrorMiddleware);
 
-// using routes
-app.use("/api", userRoutes);
-app.use("/api", courseRoutes);
-app.use("/api", adminRoutes);
+// Connect to database
+connectDB();
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-  connectDb();
+// Start server
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`Server is running on http://localhost:${process.env.PORT || 5000}`);
 });

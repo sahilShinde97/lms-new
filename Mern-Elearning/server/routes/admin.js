@@ -14,12 +14,15 @@ import uploadToCloudinary from '../middlewares/cloudinaryUpload.js';
 
 const router = express.Router();
 
-router.post('/course/new', uploadFiles.fields([{ name: 'image', maxCount: 1 }]), uploadToCloudinary, createCourse);
-router.post('/course/:id', uploadFiles.fields([{ name: 'video', maxCount: 1 }]), uploadToCloudinary, addLectures);
-router.delete("/course/:id", isAuth, isAdmin, deleteCourse);
+// Course routes
+router.post('/course/new', isAuth, isAdmin, uploadFiles.single('image'), uploadToCloudinary, createCourse);
+router.post('/course/:id', isAuth, isAdmin, uploadFiles.single('video'), uploadToCloudinary, addLectures);
 router.delete("/lecture/:id", isAuth, isAdmin, deleteLecture);
+router.delete("/course/:id", isAuth, isAdmin, deleteCourse);
+
+// Stats and user management routes
 router.get("/stats", isAuth, isAdmin, getAllStats);
-router.put("/user/:id", isAuth, updateRole);
 router.get("/users", isAuth, isAdmin, getAllUser);
+router.put("/user/:id", isAuth, isAdmin, updateRole);
 
 export default router;

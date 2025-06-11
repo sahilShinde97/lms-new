@@ -136,6 +136,8 @@ const Lecture = ({ user }) => {
             toast.loading(`Uploading: ${percentCompleted}%`, { id: "upload" });
           },
           timeout: 300000, // 5 minutes timeout
+          maxContentLength: Infinity,
+          maxBodyLength: Infinity
         }
       );
 
