@@ -1,0 +1,98 @@
+.about {
+  padding: 80px 20px;
+  text-align: center;
+  min-height: 60vh;
+  background-color: #faf6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-content {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(138, 75, 175, 0.15);
+  transition: all 0.3s ease;
+}
+
+.about-content:hover {
+  box-shadow: 0 12px 32px rgba(138, 75, 175, 0.25);
+}
+
+.about-content h2 {
+  font-size: 36px;
+  color: #8a4baf;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.about-content p {
+  font-size: 17px;
+  color: #333;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+.about-content ul.bullet-points {
+  list-style-type: disc;
+  padding-left: 40px;
+  text-align: left;
+  margin-bottom: 25px;
+  color: #444;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.about-content strong {
+  color: #6a1b9a;
+  font-weight: 600;
+}
+
+.about-content em {
+  display: block;
+  margin-top: 20px;
+  font-style: italic;
+  color: #5a3b77;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .about-content {
+    padding: 30px 20px;
+  }
+
+  .about-content h2 {
+    font-size: 28px;
+  }
+
+  .about-content p,
+  .about-content ul.bullet-points {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .about-content ul.bullet-points {
+    padding-left: 25px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-content h2 {
+    font-size: 24px;
+  }
+
+  .about-content {
+    padding: 25px 15px;
+  }
+
+  .about-content p,
+  .about-content ul.bullet-points {
+    font-size: 15px;
+  }
+}
