@@ -26,13 +26,15 @@ import "./index.css";
 
 const App = () => {
   const { isAuth, user, loading } = UserData();
-  return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <BrowserRouter>
-          <Header isAuth={isAuth} />
+
+  return loading ? (
+    <Loading />
+  ) : (
+    <div className="min-h-screen flex flex-col">
+      <BrowserRouter>
+        <Header isAuth={isAuth} />
+
+        <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -42,10 +44,7 @@ const App = () => {
               element={isAuth ? <Account user={user} /> : <Login />}
             />
             <Route path="/login" element={isAuth ? <Home /> : <Login />} />
-            <Route
-              path="/register"
-              element={isAuth ? <Home /> : <Register />}
-            />
+            <Route path="/register" element={isAuth ? <Home /> : <Register />} />
             <Route path="/verify" element={isAuth ? <Home /> : <Verify />} />
             <Route
               path="/forgot"
@@ -71,17 +70,14 @@ const App = () => {
               path="/course/study/:id"
               element={isAuth ? <CourseStudy user={user} /> : <Login />}
             />
-
             <Route
               path="/lectures/:id"
               element={isAuth ? <Lecture user={user} /> : <Login />}
             />
-
             <Route
               path="/admin/dashboard"
               element={isAuth ? <AdminDashbord user={user} /> : <Login />}
             />
-
             <Route
               path="/admin/course"
               element={isAuth ? <AdminCourses user={user} /> : <Login />}
@@ -91,10 +87,11 @@ const App = () => {
               element={isAuth ? <AdminUsers user={user} /> : <Login />}
             />
           </Routes>
-          <Footer />
-        </BrowserRouter>
-      )}
-    </>
+        </main>
+
+        <Footer />
+      </BrowserRouter>
+    </div>
   );
 };
 
