@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../Utils/Layout";
 import axios from "axios";
 import { server } from "../../main";
-import "./dashboard.css";
 
 const AdminDashbord = ({ user }) => {
   const navigate = useNavigate();
@@ -29,21 +28,22 @@ const AdminDashbord = ({ user }) => {
   useEffect(() => {
     fetchStats();
   }, []);
+
   return (
     <div>
       <Layout>
-        <div className="main-content">
-          <div className="box">
-            <p>Total Courses</p>
-            <p>{stats.totalCoures}</p>
+        <div className="flex flex-wrap justify-center items-center gap-8 py-12 bg-gradient-to-br from-purple-50 via-white to-yellow-50 min-h-[60vh]">
+          <div className="bg-white rounded-2xl shadow-xl p-8 min-w-[220px] flex flex-col items-center border-t-4 border-purple-500 hover:scale-105 hover:shadow-2xl transition-all duration-300">
+            <p className="text-lg font-semibold text-gray-700 mb-2">Total Courses</p>
+            <p className="text-3xl font-extrabold text-purple-700">{stats.totalCoures}</p>
           </div>
-          <div className="box">
-            <p>Total Lectures</p>
-            <p>{stats.totalLectures}</p>
+          <div className="bg-white rounded-2xl shadow-xl p-8 min-w-[220px] flex flex-col items-center border-t-4 border-pink-500 hover:scale-105 hover:shadow-2xl transition-all duration-300">
+            <p className="text-lg font-semibold text-gray-700 mb-2">Total Lectures</p>
+            <p className="text-3xl font-extrabold text-pink-600">{stats.totalLectures}</p>
           </div>
-          <div className="box">
-            <p>Total Users</p>
-            <p>{stats.totalUsers}</p>
+          <div className="bg-white rounded-2xl shadow-xl p-8 min-w-[220px] flex flex-col items-center border-t-4 border-yellow-400 hover:scale-105 hover:shadow-2xl transition-all duration-300">
+            <p className="text-lg font-semibold text-gray-700 mb-2">Total Users</p>
+            <p className="text-3xl font-extrabold text-yellow-500">{stats.totalUsers}</p>
           </div>
         </div>
       </Layout>
