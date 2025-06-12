@@ -22,6 +22,7 @@ import AdminCourses from "./admin/Courses/AdminCourses";
 import AdminUsers from "./admin/Users/AdminUsers";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
+import "./index.css";
 
 const App = () => {
   const { isAuth, user, loading } = UserData();
