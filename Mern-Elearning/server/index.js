@@ -16,9 +16,11 @@ const app = express();
 // Middleware
 app.use(express.json({ limit: '500mb' }));
 app.use(express.urlencoded({ extended: true, limit: '500mb' }));
+
+// CORS configuration
 app.use(
   cors({
-    origin: process.env.frontendurl || "http://localhost:5173",
+    origin: "https://digital-world-with-vaishnavi-fronte-vert.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })

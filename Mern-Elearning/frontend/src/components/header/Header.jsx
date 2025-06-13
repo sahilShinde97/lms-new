@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { HiMenu, HiX } from "react-icons/hi";
+import logo from "../../assets/logo.png"; // Change to .svg if using SVG
 
 const Header = ({ isAuth }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,10 +13,16 @@ const Header = ({ isAuth }) => {
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        {/* Larger, gradient, shadowed logo */}
-        <div className="text-4xl md:text-4xl font-extrabold bg-gradient-to-r from-purple-700 via-purple-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-lg select-none tracking-wide">
-          V-Shinde
-        </div>
+        {/* Logo Image */}
+        <Link to="/" className="flex items-center group">
+          <div className="relative p-1 rounded-full overflow-visible animate-float">
+            {/* Very Light Gradient Circle */}
+            <div className="absolute inset-0 rounded-full z-0 bg-gradient-to-tr from-blue-100 via-purple-100 to-yellow-100 opacity-40 blur-md"></div>
+            {/* Glowing Effect */}
+            <div className="absolute inset-0 rounded-full z-0 bg-blue-200 opacity-30 blur-xl animate-pulse"></div>
+            <img src={logo} alt="VS Logo" className="relative z-10 h-16 w-auto object-contain select-none drop-shadow-2xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3" />
+          </div>
+        </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex space-x-8 text-lg font-semibold">
